@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Images{% endblock %}
+{% block page_content %}
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  body{
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+    background-color: #202124;
+  }
+  a{
+    color:white;
+  }
+  a:hover{
+    color:white;
+  }
+  li1 {
+    display: inline-block;
+  }
+  label {
+    border: 1px solid #fff;
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+  label img {
+    height: 190px;
+    width: 180px;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+    margin: auto;
+    
+  }
+  
+  @media only screen and (max-width: 600px) {
+    label img {
+    height: 100px;
+    width: 90px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+  }
+  }
+  @media only screen and (max-width: 800px) {
+    label img {
+    height: 200px;
+    width: 180px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+  }
+  }
+  img.hover-shadow {
+  transition: 0.3s;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 4px 8px 0 #5084c8, 0 6px 20px 0 #5084c8;
+}
+ 
+</style>
+<main class="page-content">
+  <div class="container-fluid">
+    <h2><i class="fa fa-image"></i> Images</h2>
+    <hr><br>
+    <ul id="mySlides" class="container-fluid">
+      
+      {% for year in year %}
+        <strong style="font-size:25px; color:rgb(200, 200, 200);">{{year}}</strong><br><br>
+        {% for image in images %}
+          {% if image.date == year %}
+            <li1>
+              <label for="{{image.path}}"><img src="{{ url_for('custom_static',
+                  filename=image.p) }}" alt="{{image.p}}" 
+                  class="hover-shadow cursor demo" onclick="document.getElementById('{{image.p}}').style.display='block'"/></label>
+            </li1>
+          {% endif %}
+        {% endfor %}
+        <br><br><br>
+      {% endfor %}
+    </ul>   
+    {% if not images %}
+        <br><br><br>
+        <center>
+        <img src="https://cdn-icons-png.flaticon.com/512/1201/1201867.png" width="15%">
+       </center>
+    {% endif %} 
+
+    {% for image in images %}
+    <div id="{{image.p}}" class="w3-modal">
+      <div class="w3-modal-content" style="background-color: #202124;width: 400px;">
+        <div class="modal-header">
+          <h5 class="w3-modal-title" id="exampleModalLabel" style="font-size:20px">{{image.path}}</h5>
+          <button type="button" style="color: white;" onclick="document.getElementById('{{image.p}}').style.display='none'" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="w3-container" >
+          <img src="{{ url_for('custom_static',
+                  filename=image.p) }}" alt="{{image.p}}" style="width:100%"/>
+        </div>
+        <div class="modal-footer">
+          <a href="/downloadimage/{{image.p}}"><button type="button" class="btn btn-success"><i class="fa fa-download"></i></button></a>
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('{{image.p}}').style.display='none'">Close</button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+</main>
+
+{% endblock %}

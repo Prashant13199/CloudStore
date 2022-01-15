@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+        <title>{{name}}</title>
+        <style>
+            body{
+                background-color: black;
+                font-family: 'Montserrat', sans-serif;
+            }
+            i{
+                margin: 10px;
+                color: gray;
+                cursor: pointer;
+            }
+            i:hover{
+                color: white;
+            }
+            a{
+                text-decoration: none;
+            }
+            p{
+                color: rgb(195, 195, 195);
+                font-size: medium;
+            }
+        </style>
+    </head>
+    <body>
+        <i class="fa fa-arrow-left fa-3x" onclick="history.back()"></i>
+        <a href="/"><i class="fa fa-home fa-3x"></i></a>
+        <center>
+        <p>{{name}}</p>
+        <br>
+        <video id="my-video" width=75% controls>
+            <source src="{{ url_for('custom_static', filename=path) }}" type="video/mp4"/>
+            <track src="{{ url_for('custom_static', filename=n) }}" kind="subtitles" srclang="en" label="English" default>
+        </video>
+        <br><br>
+        {% if session['email'] in path %}
+        <p>Not playing? Try converting to <a href="/converttomp4/{{path}}">mp4</a> format. <span class="badge badge-pill badge-primary">Beta</span></p>
+        {% endif %}
+        <p>Play Next Song <a href="/playvideo/{{video.p}}">{{video.path}}</a></p>
+        </center>
+    </body>
+    <script>
+        var vid = document.getElementById("my-video");
+        vid.onended = function() {
+            swal({
+                buttons: true,
+                icon: "info",
+                title: "Play next?",
+                text: "{{video.path}}"
+            }).then(function(isConfirm) {
+            console.log("confirmed?", isConfirm);
+            if (isConfirm) {
+                window.location.href = '/playvideo/{{video.p}}';
+            }
+            else 
+              {
+                return false;
+              }
+            });
+            
+        };
+        document.onkeydown = function(event) {
+            switch (event.keyCode) {
+                case 37:
+                    event.preventDefault();
+                    vid_currentTime = vid.currentTime;
+                    vid.currentTime = vid_currentTime - 10;
+                    break;
+                
+                case 39:
+                    event.preventDefault();
+                    vid_currentTime = vid.currentTime;
+                    vid.currentTime = vid_currentTime + 10;
+                    break;
+                case 70:
+                    if (vid.requestFullscreen) {
+                        vid.requestFullscreen();
+                    } else if (vid.webkitRequestFullscreen) { /* Safari */
+                        vid.webkitRequestFullscreen();
+                    } else if (vid.msRequestFullscreen) { /* IE11 */
+                        vid.msRequestFullscreen();
+                    }
+            }
+        };
+    </script>
+</html>
+

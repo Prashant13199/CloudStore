@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}Register User{% endblock %}
+{% block page_content %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+<link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css">
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+<style>
+  body{
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+    background-color: #202124;
+  }
+  .btn:hover{
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+  }
+  a{
+    color:white;
+  }
+  a:hover{
+    color:white;
+  }
+</style>
+<style>
+    #snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #5084c8;
+      color: #fff;
+      text-align: left;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      right: 10px;
+      bottom: 30px;
+    }
+
+    .show-bar {
+      visibility: visible !important;
+      animation: fadein 0.5s, fadeout 0.5s 4.5s;
+    }
+
+    @keyframes fadein {
+      from {
+        bottom: 0;
+        opacity: 0;
+      }
+
+      to {
+        bottom: 30px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeout {
+      from {
+        bottom: 30px;
+        opacity: 1;
+      }
+
+      to {
+        bottom: 0;
+        opacity: 0;
+      }
+    }
+  </style>
+  <script>
+    function showSnackbar(msg) {
+        var snackBar = 
+          document.getElementById("snackbar")
+        snackBar.innerHTML = msg
+        snackBar.className = "show-bar";
+        setTimeout(function () {
+          snackBar.className = 
+              snackBar.className.replace("show-bar", ""); 
+        }, 3000);
+    }
+  </script>
+<script>
+    function deleteuser(data){
+        swal({
+            title: "Are you sure to delete user??",
+            text: `${data}`,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then(function(isConfirm) {
+            console.log("confirmed?", isConfirm);
+            if (isConfirm) {
+            ur = "/delete_user/"+data
+              req = $.ajax({
+                url: ur,
+                contentType: 'application/json',
+                dataType: 'json',
+              });
+              req.done(function (data) {
+                $("#myTable").load(" #myTable");
+                showSnackbar(data.message);
+              });
+            }
+          else {
+            return false;
+        } 
+      });
+    }
+  </script>
+<main class="page-content">
+  <div class="container-fluid">
+    <div id="snackbar" style="text-align:center;"></div>
+      <h2><i class="fa fa-file-text"></i> Users</h2>
+      <hr>
+      <h3>Regsiter New User</h3>
+      <form action="register_user" method="POST">
+        <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Name" required style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" required style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password" required minlength="6" style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="form-group">
+            <select class="form-control" id="exampleFormControlSelect1" name="user" required style="background-color: #3a3f48;color: white;border-color: transparent;height: 40px;">
+                <option value="" disabled selected>Choose User Role</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Register</button></div>
+      </form>
+      <br><br><br>
+      <h3>Manage Users</h3>
+      <input type="text" id="myInput" class="form-control search-menu search" placeholder="Search" style="background-color: #3a3f48;color: white;border-color: transparent;">
+      <div class='table-responsive' id="myTable" style="border: none;">
+        <table class="table table-borderless table-dark" id="table">
+          <thead>
+            <tr>
+              <th style="text-align:left;" id ="sl">Name <i class="fa fa-sort fa-sm"></i></th>
+              <th style="text-align:center;" id ="sl">Email <i class="fa fa-sort fa-sm"></i></th>
+              <th style="text-align:center;" id ="sl">User <i class="fa fa-sort fa-sm"></i></th>
+              <th style="text-align:center;" id ="nm">Used <i class="fa fa-sort fa-sm"></i></th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myTable1">
+            {% for user in users %}
+            <tr class="w3-opacity w3-hover-opacity-off">
+              <td style="text-align:left;">{{user['name']}}</td>
+              <td style="text-align:center;" >{{user['email']}}</td>
+              <td style="text-align:center;">{{user['user']}}</td>
+              <td style="text-align:center;">{{user['size']}} MB</td>
+              <td style="text-align:right;">
+                  <a href="/edituser/{{user['email']}}"><button class="btn btn-warning"><i class="fa fa-pencil-square"></i></button></a>
+                  <a onclick="deleteuser('{{user['email']}}')" href="#"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+  </div>
+  </main>
+  <script>
+    function sortTable(f,n){
+    var rows = $('#table tbody  tr').get();
+
+    rows.sort(function(a, b) {
+
+        var A = getVal(a);
+        var B = getVal(b);
+
+        if(A < B) {
+            return -1*f;
+        }
+        if(A > B) {
+            return 1*f;
+        }
+        return 0;
+    });
+
+    function getVal(elm){
+        var v = $(elm).children('td').eq(n).text().toUpperCase();
+        if($.isNumeric(v)){
+            v = parseInt(v,10);
+        }
+        return v;
+    }
+
+    $.each(rows, function(index, row) {
+        $('#table').children('tbody').append(row);
+    });
+}
+var f_sl = 1; // flag to toggle the sorting order
+var f_nm = 1; // flag to toggle the sorting order
+$("#sl").click(function(){
+    f_sl *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_sl,n);
+});
+$("#nm").click(function(){
+    f_nm *= -1; // toggle the sorting order
+    var n = $(this).prevAll().length;
+    sortTable(f_nm,n);
+});
+  </script>
+   <script>
+    $(document).ready(function () {
+      $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable1 tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
+  {% if error %}
+  <script>
+      // alert('{{message}}');
+      swal({
+        title: "Error",
+        text: "{{message}}",
+        icon: "warning",
+        timer: 1000,
+        buttons:false
+      });
+  </script>
+  {% endif %}
+  {% if success %}
+  <script>
+      // alert('{{message}}');
+      swal({
+        title: "success",
+        text: "{{message}}",
+        icon: "success",
+        timer: 1000,
+        buttons:false
+      });
+  </script>
+
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Download{% endblock %}
+{% block page_content %}
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+<style>
+  body{
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+    background-color: #202124;
+  }
+  .btn:hover{
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+  }
+  a{
+    color:white;
+  }
+  a:hover{
+    color:white;
+  }
+</style>
+<main class="page-content">
+  <div class="container-fluid">
+      <h2><i class="fa fa-download"></i> Download</h2>
+      <hr>
+      <h3>Download Anything</h3>
+      <form method="POST" class="w3-center">
+        <div class="form-group"><input autofocus class="form-control" type="text" name="link" placeholder="Paste your link here" required style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button class="btn btn-primary" formaction="/download_yt" type="submit"><i class="fa fa-video"></i> YT</button>
+          <button class="btn btn-primary" formaction="/download_audio" type="submit"><i class="fa fa-file-audio-o"></i> YT Audio</button>
+          <button class="btn btn-primary" formaction="/download_file" type="submit"><i class="fa fa-file"></i> Files</button>
+          <button class="btn btn-primary" formaction="/download_torrent" type="submit"><i class="fa fa-file-code-o"></i> Torrent</button>
+        </div>
+      </form>
+      <br><br>
+      {% if downloads or torrents %}
+      <h3>Progress</h3>
+      {% endif %}
+      {% if downloads %}
+      <input type="text" id="myInput" class="form-control search-menu search" placeholder="Search" style="background-color: #3a3f48;color: white;border-color: transparent;">
+      {% endif %}
+      <div class='table-responsive' id="myTable" style="border: none;">
+        {% if downloads %}
+        <table class="table table-borderless table-dark" id="table">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Size</th>
+              <th style="text-align:left;">Name</th>
+              <th style="text-align:right;">Date</th>
+            </tr>
+          </thead>
+          <tbody id="myTable1">
+            {% for file in (downloads) %}
+            <tr class="w3-opacity w3-hover-opacity-off">
+              <td style="text-align:left;" >{{file.size}} MB</td>
+              <td style="text-align:left;"><a href="/showfile/{{file.p}}" style="text-decoration: none;">{{file.path}}</a></td>
+              <td style="text-align:right;">{{file.date}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+      <br><br>
+      <div class='table-responsive' id="myTable1" style="border: none;">
+        {% if torrents %}
+        <table class="table table-borderless table-dark" id="table1">
+          <thead>
+            <tr>
+              <th style="text-align:left;">ETA</th>
+              <th style="text-align:left;">Speed</th>
+              <th style="text-align:left;">Name</th>
+              <th style="text-align:left;">Total Size</th>
+              <th style="text-align:left;">Completed</th>
+              <th style="text-align:left;">State</th>
+            </tr>
+          </thead>
+          <tbody id="myTable11">
+            {% for file in (torrents) %}
+            <tr class="w3-opacity w3-hover-opacity-off">
+              <td style="text-align:left;" >{{file['eta']/60}} min</td>
+              <td style="text-align:left;" >{{(file['dlspeed']/1024/1024)}} Mbps</td>
+              <td style="text-align:left;">{{file['name']}}</td>
+              <td style="text-align:left;">{{file['total_size']/1024/1024}} MB</td>
+              <td style="text-align:left;">{{file['completed']/1024/1024}} MB</td>
+              <td style="text-align:left;">{{file['state']}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+        {% endif %}
+    </div>
+  </div>
+  </main>
+  {% with messages = get_flashed_messages() %}  
+  {% if messages %}  
+    {% for message in messages %}
+    <script>
+      swal({
+        title: "Downloading",
+        text: "{{message}}",
+        icon: "success",
+        timer: 1000,
+        buttons:false
+      });
+      window.location.reload();
+  </script>     
+    {% endfor %}  
+  {% endif %}  
+{% endwith %} 
+  <script>
+    setInterval(refresh, 3000);
+    function refresh(){
+      $("#myTable").load(" #myTable");
+    }
+  </script>
+    <script>
+    $(document).ready(function () {
+      $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
+
+{% endblock %}
