@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}Images{% endblock %}
+{% block page_content %}
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<script>
+  function close1() {
+    jQuery(document).ready(function ($) {
+      var alterClass = function () {
+        var ww = document.body.clientWidth;
+        if (ww < 990) {
+          $('.page-wrapper').removeClass("toggled");
+        } else if (ww >= 990) {
+          $('.page-wrapper').addClass("toggled");
+        };
+      };
+      $(window).resize(function () {
+        alterClass();
+      });
+      alterClass();
+    });
+  }
+</script>
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  #myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #5084c8;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  #myBtn:hover {
+    background-color: #555;
+  }
+
+  .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover,
+  .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  body {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: white;
+    background-color: #202124;
+    font-size: 18px;
+  }
+
+  li1 {
+    display: inline-block;
+  }
+
+  label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  label img {
+    height: 210px;
+    width: 210px;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+    margin: auto;
+    object-fit: cover;
+  }
+
+  @media only screen and (max-width: 990px) {
+    label img {
+      height: 100px;
+      width: 100px;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+      transition-duration: 0.2s;
+      transform-origin: 50% 50%;
+      object-fit: cover;
+    }
+  }
+
+  img.hover-shadow {
+    transition: 0.3s;
+  }
+
+  .hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 #5084c8, 0 6px 20px 0 #5084c8;
+  }
+</style>
+<main class="page-content">
+  <div style="padding: 15px;">
+    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Top</button>
+    <h2><img src="https://img.icons8.com/color/48/000000/image.png" height="40px" /> <b>Images</b></h2>
+    <hr>
+    {% if images %}
+    <ul id="mySlides" class="container-fluid w3-center">
+      {% for year in year %}
+      <strong style="font-size:25px; color:rgb(200, 200, 200);float: left;">{{year}}</strong><br><br>
+      {% for i in range(le) %}
+      {% if images[i].date == year %}
+      <li1>
+        <label for="{{images[i].path}}"><img src="{{ url_for('custom_static',
+                  filename=images[i].p) }}" alt="{{images[i].p}}" class="hover-shadow cursor demo"
+            onclick="document.getElementById({{i}}).style.display='block';$('.page-wrapper').removeClass('toggled');" /></label>
+      </li1>
+      {% endif %}
+      {% endfor %}
+      <br><br><br>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if not images %}
+    <br>
+    <center>
+      <img src="https://cdn-icons-png.flaticon.com/512/1201/1201867.png" width="15%">
+    </center>
+    {% endif %}
+
+    {% for i in range(le) %}
+    <div id="{{i}}" class="w3-modal">
+      <div class="w3-modal-content" style="background-color: #202124;">
+        <div class="modal-header">
+          <h5 class="w3-modal-title" id="exampleModalLabel" style="font-size:20px"><img
+              src="https://img.icons8.com/color/48/000000/image.png" height="40px" /> {{images[i].path}}</h5>
+          <button type="button" style="color: white;"
+            onclick="document.getElementById({{i}}).style.display='none';close1();" class="close" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <a class="prev" onclick="prevSlides({{i}})">&#10094;</a>
+        <a class="next" onclick="plusSlides({{i}})">&#10095;</a>
+        <div class="w3-container">
+          <img src="{{ url_for('custom_static',
+                  filename=images[i].p) }}" alt="{{images[i].p}}"
+            style="width:100%;height: 500px; object-fit: contain;" />
+        </div>
+        <div class="modal-footer">
+          <a href="/downloadimage/{{images[i].p}}"><button type="button" class="btn btn-success"><i
+                class="fa fa-download"></i></button></a>
+          <!-- <button type="button" class="btn btn-secondary" onclick="document.getElementById({{i}}).style.display='none'">Close</button> -->
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <br><br>
+</main>
+<script>
+  function plusSlides(n) {
+    document.getElementById(n).style.display = 'none'
+    document.getElementById(n + 1).style.display = 'block'
+  }
+  function prevSlides(n) {
+    document.getElementById(n).style.display = 'none'
+    document.getElementById(n - 1).style.display = 'block'
+  }
+</script>
+<script>
+  //Get the button
+  var mybutton = document.getElementById("myBtn");
+
+  // When the user scrolls down 20px from the top of the document, show the button
+  window.onscroll = function () { scrollFunction() };
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.style.display = "block";
+    } else {
+      mybutton.style.display = "none";
+    }
+  }
+
+  // When the user clicks on the button, scroll to the top of the document
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+</script>
+
+{% endblock %}

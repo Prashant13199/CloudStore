@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block page_content %}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+
+<style>
+  body {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: white;
+    background-color: #202124;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .2), 0 10px 10px rgba(0, 0, 0, .2);
+  }
+</style>
+<style>
+  #snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #5084c8;
+    color: #fff;
+    text-align: left;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    right: 10px;
+    bottom: 30px;
+  }
+
+  .show-bar {
+    visibility: visible !important;
+    animation: fadein 0.5s, fadeout 0.5s 4.5s;
+  }
+
+  @keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+
+  p {
+    font-size: 50px;
+  }
+</style>
+<script>
+  function showSnackbar(msg) {
+    var snackBar =
+      document.getElementById("snackbar")
+    snackBar.innerHTML = msg
+    snackBar.className = "show-bar";
+    setTimeout(function () {
+      snackBar.className =
+        snackBar.className.replace("show-bar", "");
+    }, 3000);
+  }
+</script>
+<main class="page-content">
+  <div style="padding: 15px;" id="image">
+    <div id="snackbar" style="text-align:center;"></div>
+    <h2><img src="https://img.icons8.com/color/48/000000/user.png" height="40px" /> <b>Edit user profile</b></h2>
+    <hr>
+    <br>
+    <center>
+      <img class="image-responsive img-rounded" src="{{ url_for('custom_static',filename=userimg) }}" width=250px
+        onerror="handleerror(this);" style="border-radius: 8%;" />
+    </center>
+    <br><br>
+    <div style="max-width: 400px;margin:auto">
+      <form action="/edit_user" method="POST">
+        <div class="form-group"><input class="form-control" type="text" value="{{user[2]}}" name="name"
+            placeholder="Name" required style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="form-group"><input class="form-control" type="email" value="{{user[0]}}" name="email" readonly
+            placeholder="Email" required style="background-color: #3a3f48;color: white;border-color: transparent;">
+        </div>
+        <div class="form-group"><input class="form-control" name="password" value="{{user[1]}}" placeholder="Password"
+            required minlength="6" style="background-color: #3a3f48;color: white;border-color: transparent;"></div>
+        <div class="form-group">
+          <select class="form-control" value="{{user[3]}}" required id="exampleFormControlSelect1" name="user"
+            style="background-color: #3a3f48;color: white;border-color: transparent;height: 40px;">
+            <option value="" disabled selected>{{user[3]}}</option>
+            <option value="user">user</option>
+            <option value="admin">admin</option>
+          </select>
+        </div>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Update</button></div>
+      </form>
+    </div>
+  </div>
+</main>
+{% if error %}
+<script>
+  swal({
+    title: "Error",
+    text: "{{message}}",
+    icon: "warning",
+    timer: 1500,
+    buttons: false
+  });
+</script>
+{% endif %}
+{% if success %}
+<script>
+  swal({
+    title: "success",
+    text: "{{message}}",
+    icon: "success",
+    timer: 1500,
+    buttons: false
+  });
+</script>
+{% endif %}
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Upload Image</h4>
+      </div>
+      <div class="modal-body" style="color:black">
+        <form action="/editimage" method="POST" enctype='multipart/form-data'>
+          <input type="file" name="image" required accept="image/*" />
+          <br>
+          <button type="submit" class='btn btn-primary'>Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<script>
+  swal({
+    title: "{{message}}",
+    icon: "success",
+    buttons: false,
+    dangerMode: true,
+    text: " ",
+    timer: 1500
+  })
+</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% endblock %}

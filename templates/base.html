@@ -1,0 +1,788 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+
+<head>
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
+  <meta charset="utf-8">
+  <link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/basic.min.css" />
+  <link rel="icon" href="{{ url_for('static', filename='icon.jpg') }}" type="image/x-icon">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="application/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+  <meta name="description"
+    content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <script>
+    var default_avatar = 'data:image/png;base64,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';
+
+    function handleerror(image) {
+      image.src = default_avatar;
+    }
+  </script>
+  <style>
+    @keyframes swing {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      10% {
+        transform: rotate(10deg);
+      }
+
+      30% {
+        transform: rotate(0deg);
+      }
+
+      40% {
+        transform: rotate(-10deg);
+      }
+
+      50% {
+        transform: rotate(0deg);
+      }
+
+      60% {
+        transform: rotate(5deg);
+      }
+
+      70% {
+        transform: rotate(0deg);
+      }
+
+      80% {
+        transform: rotate(-5deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    @keyframes sonar {
+      0% {
+        transform: scale(0.9);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    body {
+      font-size: 0.9rem;
+    }
+
+    /* .page-wrapper .sidebar-wrapper,
+    .sidebar-wrapper .sidebar-brand>a,
+    .sidebar-wrapper .sidebar-dropdown>a:after,
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before,
+    .sidebar-wrapper ul li a i,
+    .page-wrapper .page-content,
+    .sidebar-wrapper .sidebar-search input.search-menu,
+    .sidebar-wrapper .sidebar-search .input-group-text,
+    .sidebar-wrapper .sidebar-menu ul li a,
+    #show-sidebar,
+    #close-sidebar {
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      transition: all 0.3s ease;
+    } */
+
+    /*----------------page-wrapper----------------*/
+
+    .page-wrapper {
+      height: 100vh;
+    }
+
+    .page-wrapper .theme {
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 4px;
+      margin: 2px;
+    }
+
+    .page-wrapper .theme.chiller-theme {
+      background: #1e2229;
+    }
+
+    /*----------------toggeled sidebar----------------*/
+
+    .page-wrapper.toggled .sidebar-wrapper {
+      left: 0px;
+    }
+
+    @media screen and (min-width: 768px) {
+      .page-wrapper.toggled .page-content {
+        padding-left: 280px;
+      }
+    }
+
+    /*----------------show sidebar button----------------*/
+    #show-sidebar {
+      position: fixed;
+      left: 0;
+      top: 10px;
+      border-radius: 0 4px 4px 0px;
+      width: 35px;
+      transition-delay: 0.3s;
+    }
+
+    .page-wrapper.toggled #show-sidebar {
+      left: -40px;
+    }
+
+    /*----------------sidebar-wrapper----------------*/
+
+    .sidebar-wrapper {
+      width: 260px;
+      height: 100%;
+      max-height: 100%;
+      position: fixed;
+      top: 0;
+      left: -300px;
+      z-index: 999;
+    }
+
+    .sidebar-wrapper ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-wrapper a {
+      text-decoration: none;
+    }
+
+    /*----------------sidebar-content----------------*/
+
+    .sidebar-content {
+      max-height: calc(100% - 30px);
+      height: calc(100% - 30px);
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .sidebar-content.desktop {
+      overflow-y: hidden;
+    }
+
+    /*--------------------sidebar-brand----------------------*/
+
+    .sidebar-wrapper .sidebar-brand {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar-wrapper .sidebar-brand>a {
+      font-size: 18px;
+      flex-grow: 1;
+    }
+
+    .sidebar-wrapper .sidebar-brand #close-sidebar {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /*--------------------sidebar-header----------------------*/
+
+    .sidebar-wrapper .sidebar-header {
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-pic {
+      float: left;
+      width: 60px;
+      padding: 2px;
+      border-radius: 12px;
+      margin-right: 15px;
+      overflow: hidden;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-pic img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info {
+      float: left;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info>span {
+      display: block;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-role {
+      font-size: 12px;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-status {
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-status i {
+      font-size: 8px;
+      margin-right: 4px;
+      color: #5cb85c;
+    }
+
+    /*-----------------------sidebar-search------------------------*/
+
+    .sidebar-wrapper .sidebar-search>div {
+      padding: 10px 20px;
+    }
+
+    /*----------------------sidebar-menu-------------------------*/
+
+    .sidebar-wrapper .sidebar-menu {
+      padding-bottom: 10px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .header-menu span {
+      font-weight: bold;
+      font-size: 14px;
+      padding: 15px 20px 5px 20px;
+      display: inline-block;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a {
+      display: inline-block;
+      width: 100%;
+      text-decoration: none;
+      position: relative;
+      padding: 8px 30px 8px 20px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a i {
+      margin-right: 10px;
+      font-size: 12px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a:hover>i::before {
+      display: inline-block;
+      animation: swing ease-in-out 0.5s 1 alternate;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown>a:after {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f105";
+      font-style: normal;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      background: 0 0;
+      position: absolute;
+      right: 15px;
+      top: 14px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu ul {
+      padding: 5px 0;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li {
+      padding-left: 25px;
+      font-size: 13px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before {
+      content: "\f111";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 400;
+      font-style: normal;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin-right: 10px;
+      font-size: 8px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a span.label,
+    .sidebar-wrapper .sidebar-menu ul li a span.badge {
+      float: right;
+      margin-top: 8px;
+      margin-left: 5px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a .badge,
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a .label {
+      float: right;
+      margin-top: 0px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-submenu {
+      display: none;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active>a:after {
+      transform: rotate(90deg);
+      right: 17px;
+    }
+
+    /*--------------------------side-footer------------------------------*/
+
+    .sidebar-footer {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      display: flex;
+    }
+
+    .sidebar-footer>a {
+      flex-grow: 1;
+      text-align: center;
+      height: 30px;
+      line-height: 30px;
+      position: relative;
+    }
+
+    .sidebar-footer>a .notification {
+      position: absolute;
+      top: 0;
+    }
+
+    .badge-sonar {
+      display: inline-block;
+      background: #980303;
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      position: absolute;
+      top: 0;
+    }
+
+    .badge-sonar:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 2px solid #980303;
+      opacity: 0;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      animation: sonar 1.5s infinite;
+    }
+
+    /*--------------------------page-content-----------------------------*/
+
+    .page-wrapper .page-content {
+      display: inline-block;
+      width: 100%;
+      padding-left: 0px;
+      padding-top: 20px;
+    }
+
+    .page-wrapper .page-content>div {
+      padding: 20px 40px;
+    }
+
+    .page-wrapper .page-content {
+      overflow-x: hidden;
+    }
+
+    /*------scroll bar---------------------*/
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 7px;
+    }
+
+    ::-webkit-scrollbar-button {
+      width: 0px;
+      height: 0px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #525965;
+      border: 0px none #ffffff;
+      border-radius: 0px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #525965;
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+      background: #525965;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+      border: 0px none #ffffff;
+      border-radius: 50px;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-track:active {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+
+    /*-----------------------------chiller-theme-------------------------------------------------*/
+
+    .chiller-theme .sidebar-wrapper {
+      background: #31353D;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-header,
+    .chiller-theme .sidebar-wrapper .sidebar-search,
+    .chiller-theme .sidebar-wrapper .sidebar-menu {
+      border-top: 1px solid #3a3f48;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-role,
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-status,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text,
+    .chiller-theme .sidebar-wrapper .sidebar-brand>a,
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li a,
+    .chiller-theme .sidebar-footer>a {
+      color: #818896;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover>a,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active>a,
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info,
+    .chiller-theme .sidebar-wrapper .sidebar-brand>a:hover,
+    .chiller-theme .sidebar-footer>a:hover i {
+      color: #b8bfce;
+    }
+
+    .page-wrapper.chiller-theme.toggled #close-sidebar {
+      color: #bdbdbd;
+    }
+
+    .page-wrapper.chiller-theme.toggled #close-sidebar:hover {
+      color: #ffffff;
+    }
+
+    .chiller-theme .sidebar-wrapper ul li:hover a i,
+    .chiller-theme .sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu:focus+span,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
+      color: #16c7ff;
+      text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li a i,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
+      background: #3a3f48;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {
+      color: #6c7b88;
+    }
+
+    .chiller-theme .sidebar-footer {
+      background: #3a3f48;
+      box-shadow: 0px -1px 5px #282c33;
+      border-top: 1px solid #464a52;
+    }
+
+    .chiller-theme .sidebar-footer>a:first-child {
+      border-left: none;
+      text-decoration: none;
+    }
+
+    .chiller-theme .sidebar-footer>a:first-child:hover {
+      color: #b8bfce;
+    }
+
+    .chiller-theme .sidebar-footer>a:last-child:hover {
+      color: #b8bfce;
+    }
+
+    .chiller-theme .sidebar-footer>a:last-child {
+      border-right: none;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+{{ super() }}
+{% endblock %}
+{% block navbar %}
+<div class="page-wrapper chiller-theme toggled">
+  <a id="show-sidebar" class="btn btn-sm btn-primary" href="#">
+    <i class="fas fa-bars"></i>
+  </a>
+  <nav id="sidebar" class="sidebar-wrapper">
+    <div class="sidebar-content">
+      <div class="sidebar-brand">
+        <a href="/file" style="text-decoration: none;"><i class="fa fa-cloud" style="color:#2980ef;;"
+            aria-hidden="true"></i> Cloud<strong>Store</strong></a>
+        <div id="close-sidebar">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <a href="/profile">
+        <div class="sidebar-header">
+          <div class="user-pic">
+            <img class="img-responsive img-rounded" onerror="handleerror(this);"
+              src="{{ url_for('custom_static',filename=session['pic']) }}" alt="User picture">
+          </div>
+          <div class="user-info">
+            <span class="user-name">{% if session['name'] %}{{session['name']}}{% endif %}
+            </span>
+            <span class="user-role">{% if session['user'] %}{{session['user']}}{% endif %}</span>
+            <span class="user-status">
+              <i class="fa fa-circle"></i>
+              <span>Online</span>
+            </span>
+          </div>
+        </div>
+      </a>
+      <!-- <div class="sidebar-search">
+        <div>
+          <div class="input-group">
+            <input type="text" class="form-control search-menu" placeholder="Search...">
+            <div class="input-group-btn">
+              <span class="input-group-text">
+                <i class="fa fa-search fa-lg" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="sidebar-menu">
+        <ul>
+          <li class="header-menu">
+            <span>General</span>
+          </li>
+          <li class="sidebar">
+            <a href="/file">
+              <img src="https://img.icons8.com/color/48/000000/windows-explorer.png" height="30px" />
+              <span>Files</span>
+            </a>
+          </li>
+          <li class="sidebar">
+            <a href="/image">
+              <img src="https://img.icons8.com/color/48/000000/image.png" height="30px" />
+              <span>Images</span>
+            </a>
+          </li>
+          <li class="sidebar">
+            <a href="/video">
+              <img src="https://img.icons8.com/color/48/000000/video.png" height="30px" />
+              <span>Videos</span>
+            </a>
+          </li>
+          <li class="sidebar">
+            <a href="/shared">
+              <!-- <i class="fa fa-users"></i> -->
+              <img src="https://img.icons8.com/color/48/000000/share--v1.png" height="30px" />
+              <span>Shared</span>
+            </a>
+          </li>
+          <li class="sidebar">
+            <a href="/download">
+              <img src="https://img.icons8.com/color/48/000000/download-2--v1.png" height="30px" />
+              <span>Download</span>
+              <span class="badge" style="background-color:yellow;color:black">Beta</span>
+            </a>
+          </li>
+          <li class="sidebar">
+            <a href="/bin">
+              <img src="https://img.icons8.com/color/48/000000/trash--v1.png" height="30px" />
+              <span>Trash</span>
+            </a>
+          </li>
+          <li class="header-menu">
+            <span>Extra</span>
+          </li>
+          {% if session['user'] == 'admin' %}
+          <li>
+            <a href="/register_user">
+              <img src="https://img.icons8.com/color/48/000000/user.png" height="30px" />
+              <span>Manage user</span>
+            </a>
+          </li>
+          {% endif %}
+          <li>
+            <a href="/system">
+              <img src="https://img.icons8.com/color/48/000000/workstation.png" height="30px" />
+              <span>System</span>
+            </a>
+          </li>
+          <li class="header-menu">
+            <span>Storage</span>
+          </li>
+          <li>
+            <a>
+              <span>
+
+                <div style="font-size:13px;padding-bottom: 3px;"><img
+                    src="https://img.icons8.com/fluency/48/000000/hdd.png" height="18px" />&nbsp;
+                  {{session['free']}}GB of
+                  {{session['total']}}GB used
+                </div>
+                <div class="progress" style="height:5px">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="{{session['percentage']}}"
+                    aria-valuemin="0" aria-valuemax="100" style="width: {{session['percentage']}}%">
+                  </div>
+                </div>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+    <div class="sidebar-footer">
+      <a href="/switch">
+        <img src="https://img.icons8.com/color/48/000000/wifi--v1.png" height="18px" />
+        Local Network
+        <!-- <i class="fa fa-wifi"> Local Network</i> -->
+      </a>
+      <a onclick="logout()">
+        <img src="https://img.icons8.com/color/48/000000/exit.png" height="18px" />
+        Log out
+        <!-- <i class="fa fa-power-off"> Log out</i> -->
+      </a>
+    </div>
+  </nav>
+  {% endblock %}
+  {% block content %}
+  {% block page_content %}
+
+  {% endblock %}
+  {% endblock %}
+  {% block scripts %}
+  {{ super() }}
+</div>
+</div>
+<!-- page-wrapper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+  jQuery(function ($) {
+
+    $(".sidebar-dropdown > a").click(function () {
+      $(".sidebar-submenu").slideUp(200);
+      if (
+        $(this)
+          .parent()
+          .hasClass("active")
+      ) {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .parent()
+          .removeClass("active");
+      } else {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .next(".sidebar-submenu")
+          .slideDown(200);
+        $(this)
+          .parent()
+          .addClass("active");
+      }
+    });
+
+    $("#close-sidebar").click(function () {
+      $(".page-wrapper").removeClass("toggled");
+    });
+    $("#show-sidebar").click(function () {
+      $(".page-wrapper").addClass("toggled");
+    });
+  });
+</script>
+<script>
+  jQuery(document).ready(function ($) {
+    var alterClass = function () {
+      var ww = document.body.clientWidth;
+      if (ww < 990) {
+        $('.page-wrapper').removeClass("toggled");
+      } else if (ww >= 990) {
+        $('.page-wrapper').addClass("toggled");
+      };
+    };
+    $(window).resize(function () {
+      alterClass();
+    });
+    alterClass();
+  });
+</script>
+<script>
+  function logout() {
+    swal({
+      buttons: true,
+      icon: 'warning',
+      title: "Are you sure to logout?",
+    }).then(function (isConfirm) {
+      console.log("confirmed?", isConfirm);
+      if (isConfirm) {
+        window.location.replace('/logout')
+      }
+      else {
+        return false;
+      }
+    });
+  }
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% endblock %}

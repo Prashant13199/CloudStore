@@ -1,0 +1,190 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <title>{{name}}</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Trebuchet MS', sans-serif;
+            font-size: 18px;
+        }
+
+        i {
+            margin: 10px;
+            color: gray;
+            cursor: pointer;
+        }
+
+        i:hover {
+            color: white;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            color: rgb(195, 195, 195);
+            font-size: medium;
+        }
+
+        .container1 {
+            position: relative;
+            padding: 0;
+        }
+
+        .container1 video {
+            position: relative;
+            z-index: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 30;
+            left: 10;
+            z-index: 1;
+        }
+
+        .overlay1 {
+            position: absolute;
+            bottom: 42;
+            left: 10;
+            z-index: 1;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container1">
+        <i style="font-size:40px">{{name}}</i>
+        <video id="my-video" width=100% controls style="height: 80vh;"
+            poster="{{ url_for('custom_static', filename=poster) }}" preload="metadata">
+            <source src="{{ url_for('custom_static', filename=path) }}" type="video/mp4" />
+            {% if n.find('vtt')!=-1 %}
+            <track src="{{ url_for('custom_static', filename=n) }}" kind="subtitles" srclang="en" label="English"
+                default>
+            {% endif %}
+        </video>
+    </div>
+    {% if session['email'] in path %}
+    <i>Not playing? Try converting to <a href="/converttomp4/{{path}}">mp4</a> format. <span
+            class="badge badge-pill badge-primary">Beta</span></i>
+    <br>
+    {% endif %}
+    {% if video %}
+    <i>Play Next Video <a href="/playvideo/{{video.p}}">{{video.path}}</a></i>
+    {% endif %}
+    <i><a href="/video">Go to Videos</a></i>
+    </center>
+</body>
+<script>
+    var vid = document.getElementById("my-video");
+    if ('{{time}}' != '0') {
+        swal({
+            buttons: true,
+            icon: "info",
+            title: "Resume?",
+            text: "or cancel to restart",
+        }).then(function (isConfirm) {
+            console.log("confirmed?", isConfirm);
+            if (isConfirm) {
+                vid.currentTime = "{{time}}"
+                vid.play()
+            }
+            else {
+                vid.currentTime = 0
+                vid.play()
+                var arr = [];
+                arr.push(0);
+                arr.push("{{name}}")
+                arr.push(vid.duration)
+                var array = JSON.stringify(arr);
+                savetime = $.ajax({
+                    url: '/savetime',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: array
+                });
+                savetime.done(function (data) {
+                });
+            }
+        });
+    }
+
+    vid.onpause = function () {
+        var arr = [];
+        arr.push(vid.currentTime);
+        arr.push("{{name}}")
+        arr.push(vid.duration)
+        var array = JSON.stringify(arr);
+        savetime = $.ajax({
+            url: '/savetime',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: array
+        });
+        savetime.done(function (data) {
+        });
+    }
+    vid.onended = function () {
+        if ('{{video}}') {
+            swal({
+                buttons: true,
+                icon: "info",
+                title: "Play next?",
+                text: "{{video.path}}"
+            }).then(function (isConfirm) {
+                console.log("confirmed?", isConfirm);
+                if (isConfirm) {
+                    window.location.href = '/playvideo/{{video.p}}';
+                }
+                else {
+                    return false;
+                }
+            });
+        }
+    };
+    document.onkeydown = function (event) {
+        switch (event.keyCode) {
+            case 32:
+                event.preventDefault();
+                if (vid.paused) {
+                    vid.play()
+                } else {
+                    vid.pause()
+                }
+                break;
+
+            case 37:
+                event.preventDefault();
+                vid_currentTime = vid.currentTime;
+                vid.currentTime = vid_currentTime - 10;
+                break;
+
+            case 39:
+                event.preventDefault();
+                vid_currentTime = vid.currentTime;
+                vid.currentTime = vid_currentTime + 10;
+                break;
+            case 70:
+                if (vid.requestFullscreen) {
+                    vid.requestFullscreen();
+                } else if (vid.webkitRequestFullscreen) { /* Safari */
+                    vid.webkitRequestFullscreen();
+                } else if (vid.msRequestFullscreen) { /* IE11 */
+                    vid.msRequestFullscreen();
+                }
+        }
+    };
+</script>
+
+</html>

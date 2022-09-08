@@ -1,0 +1,24 @@
+############ Instructions for running ###########
+
+# Run App:
+python3 CloudStore/wsgi.py
+
+# For creating database & tables:
+source /Users/prashantkumar/CloudStore/sql_query.sql;
+
+source /home/pi/cloudstore/sql_query.sql;
+
+# for installing packages:
+pip3 install -r requirements.txt
+
+# for installing youtube-dl
+sudo snap install youtube-dl  (raspberry pi)
+
+brew install youtube-dl (mac)
+
+# for installing qbittorrent (raspberry pi)
+sudo apt install qbittorrent
+
+# auto start qbittorrent (raspberry pi)
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+@qbittorrent

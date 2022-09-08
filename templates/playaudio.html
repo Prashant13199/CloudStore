@@ -1,0 +1,73 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  <title>{{name}}</title>
+  <style>
+    body {
+      background-color: black;
+      font-family: 'Trebuchet MS', sans-serif;
+      font-size: 18px;
+    }
+
+    i {
+      margin: 10px;
+      color: gray;
+      cursor: pointer;
+    }
+
+    i:hover {
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    p {
+      color: gray;
+      font-size: medium;
+    }
+
+    audio {
+      width: 70%;
+    }
+  </style>
+</head>
+
+<body>
+  <center>
+    <br><br>
+    <i style="font-size:40px">{{name}}</i>
+    <audio controls id="my-audio">
+      <source src="{{ url_for('custom_static', filename=path) }}" type="audio/x-m4a" />
+      <source src="{{ url_for('custom_static', filename=path) }}" type="audio/mp3" />
+    </audio>
+    <br /><br />
+    <p>Play Next Song <a href="/playaudio/{{audio.p}}">{{audio.path}}</a></p>
+  </center>
+</body>
+<script>
+  var vid = document.getElementById("my-audio");
+  vid.onended = function () {
+    swal({
+      buttons: true,
+      icon: "info",
+      title: "Play next?",
+      text: "{{audio.path}}",
+    }).then(function (isConfirm) {
+      console.log("confirmed?", isConfirm);
+      if (isConfirm) {
+        window.location.href = "/playaudio/{{audio.p}}";
+      } else {
+        return false;
+      }
+    });
+  };
+</script>
+
+</html>

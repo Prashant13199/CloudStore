@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}System{% endblock %}
+{% block page_content %}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="icon" href="{{ url_for('static', filename='cloud.jpg') }}" type="image/x-icon">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+  body {
+    color: white;
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: #202124;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+
+  #snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #5084c8;
+    color: #fff;
+    text-align: left;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    right: 10px;
+    bottom: 30px;
+  }
+
+  .show-bar {
+    visibility: visible !important;
+    animation: fadein 0.5s, fadeout 0.5s 4.5s;
+  }
+
+  @keyframes fadein {
+    from {
+      bottom: 0;
+      opacity: 0;
+    }
+
+    to {
+      bottom: 30px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeout {
+    from {
+      bottom: 30px;
+      opacity: 1;
+    }
+
+    to {
+      bottom: 0;
+      opacity: 0;
+    }
+  }
+</style>
+<main class="page-content">
+  <div style="padding: 15px;">
+    <h2><img src="https://img.icons8.com/color/48/000000/workstation.png" height="40px" /> <b>System</b></h2>
+    <hr>
+    <div style="max-width: 800px;margin: auto;">
+      <br><br>
+      <div>
+        <h3><img src="https://img.icons8.com/color/48/000000/smartphone-ram.png" height="40px" /> Ram Usage</h3>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ram}}" aria-valuemin="0"
+            aria-valuemax="100" style="width:{{ram}}%">
+            {{ram}}%
+          </div>
+        </div>
+      </div><br><br>
+      <div>
+        <h3><img src="https://img.icons8.com/color/48/000000/system-task.png" height="40px" /> CPU Usage</h3>
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{cpu}}" aria-valuemin="0"
+            aria-valuemax="100" style="width:{{cpu}}%">
+            {{cpu}}%
+          </div>
+        </div>
+      </div><br><br>
+      <div>
+        <h3><img src="https://img.icons8.com/color/48/000000/hdd.png" height="40px" /> Disk Usage</h3>
+        <h4>Total <b>{{total}}</b>GB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Free <b>{{free}}</b>GB</h4>
+        <div class="progress">
+          <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{used}}" aria-valuemin="0"
+            aria-valuemax="100" style="width:{{used}}%">
+            {{used}}%
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+{% endblock %}
