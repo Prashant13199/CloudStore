@@ -1,5 +1,5 @@
 # CloudStore
-Personal cloud storage
+Self Hosting Personal cloud storage
 
 
 Read Instructions.txt for setup process
